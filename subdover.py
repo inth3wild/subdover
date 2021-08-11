@@ -46,14 +46,14 @@ def check_and_update():
         
     ongoing_version = ongoing_version.text.strip()
     
-    with open(subdover_dir+"version.txt", "r") as f:
+    with open("/opt/subdover/"+"version.txt", "r") as f:
         currentVersion = f.read()
         if currentVersion != ongoing_version:
             print(f"{YELLOW}[*] Installing Subdover v{ongoing_version}")
             subprocess.run("git pull origin master", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
             print(f"{GREEN}[+] Updated to latest version: v{ongoing_version}..")
             
-            with open(subdover_dir+"version.txt", "w") as f:
+            with open("/opt/subdover/"+"version.txt", "w") as f:
                 f.write(ongoing_version)
             sys.exit()
         else:
@@ -188,16 +188,6 @@ if __name__ == '__main__':
     KillThread = False
 
     try:
-        if arguments.output:
-            with open(arguments.output, "w") as f:
-                f.write("                   +===============================+\n")
-                f.write("                   | SUBDOVER (SUBDomain takeOVER) |\n")
-                f.write("                   +===============================+\n\n")
-                f.write("       (Tool Author: Pushpender | GitHub: @PushpenderIndia)\n")
-                f.write("+======================================================================+\n")
-                f.write("| Potentially Vulnerable Targets to Subdomain Takeover (DNS Hijacking) |\n")
-                f.write("+======================================================================+\n")
-
         if arguments.check_and_update:
             if AttackerSystem == "Windows":
                 try:
