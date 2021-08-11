@@ -19,10 +19,9 @@ if os.name in ('ce', 'nt', 'dos'):
 elif 'posix' in os.name:
     AttackerSystem = "Linux"
 
-# Declearing Environmental Path for Subdover    
-subdover_dir = str(os.path.realpath(__file__)).replace("subdover.py", "").replace("\\", "/")
-findomain_path = subdover_dir + "externals/findomain.exe"
-httpx_path = subdover_dir + "externals/httpx.exe"
+#  Declearing Environmental Path for Subdover    
+# subdover_dir = str(os.path.realpath(__file__)).replace("subdover.py", "").replace("\\", "/")
+# findomain_path = subdover_dir + "externals/findomain.exe"
 
 def get_arguments():
     parser = argparse.ArgumentParser(description=f'{RED}SubDover v1.4')
@@ -37,13 +36,6 @@ def get_arguments():
     required_arguments.add_argument("-l", "--list", dest="subdomain_list", help="Target Subdomain List, ex:- google_subdomain.txt")
     return parser.parse_args()
 
-def check_dependencies(commandToCheck):
-    a = subprocess.run(str(commandToCheck), shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
-    if a.returncode == 0:
-        print(f"{GREEN}[+] {WHITE}{commandToCheck.split()[0]} {GREEN}is Installed on your system.{WHITE}")
-    else:
-        print(f"{RED}[!] {WHITE}{commandToCheck.split()[0]}{RED} is not Installed on your system.{WHITE}")
-        sys.exit()
 
 def check_and_update():            
     try:
@@ -190,45 +182,37 @@ def start_scanning(subdomain_list):
         testTarget(subdomain)     
 
 if __name__ == '__main__':
-    print(f"\t\t{YELLOW}Author: {GREEN}Pushpender Singh  | {YELLOW}GitHub: {GREEN}PushpenderIndia\n{WHITE}")
+    print("Starting Subover")
     arguments = get_arguments() 
     
-    if AttackerSystem == "Linux":
-        print("========================================================")
-        print("[>>] Checking Dependencies ...")
-        print("========================================================")
-        check_dependencies("findomain --version")
-        check_dependencies("httpx -version")
-        print("\n")    
-
     KillThread = False
-    
-    if arguments.output:
-        with open(arguments.output, "w") as f:
-            f.write("                   +===============================+\n")
-            f.write("                   | SUBDOVER (SUBDomain takeOVER) |\n")
-            f.write("                   +===============================+\n\n")
-            f.write("       (Tool Author: Pushpender | GitHub: @PushpenderIndia)\n")
-            f.write("+======================================================================+\n")
-            f.write("| Potentially Vulnerable Targets to Subdomain Takeover (DNS Hijacking) |\n")
-            f.write("+======================================================================+\n")
 
-    if arguments.check_and_update:
-        if AttackerSystem == "Windows":
-            try:
-                git_path = subprocess.check_output("where git", shell=True)
-                check_and_update()
-            except Exception:
-                print(f"{WHITE}[{RED}ERR{WHITE}] GIT is NOT Installed on Your System! You can't use AutoUpdater .") 
-                sys.exit()
-        else:
-            try:
-                git_path = subprocess.check_output("which git", shell=True)
-                check_and_update()
-            except Exception:
-                print(f"{WHITE}[{RED}ERR{WHITE}] GIT is NOT Installed on Your System! You can't use AutoUpdater .")              
-                sys.exit()
     try:
+        if arguments.output:
+            with open(arguments.output, "w") as f:
+                f.write("                   +===============================+\n")
+                f.write("                   | SUBDOVER (SUBDomain takeOVER) |\n")
+                f.write("                   +===============================+\n\n")
+                f.write("       (Tool Author: Pushpender | GitHub: @PushpenderIndia)\n")
+                f.write("+======================================================================+\n")
+                f.write("| Potentially Vulnerable Targets to Subdomain Takeover (DNS Hijacking) |\n")
+                f.write("+======================================================================+\n")
+
+        if arguments.check_and_update:
+            if AttackerSystem == "Windows":
+                try:
+                    git_path = subprocess.check_output("where git", shell=True)
+                    check_and_update()
+                except Exception:
+                    print(f"{WHITE}[{RED}ERR{WHITE}] GIT is NOT Installed on Your System! You can't use AutoUpdater .") 
+                    sys.exit()
+            else:
+                try:
+                    git_path = subprocess.check_output("which git", shell=True)
+                    check_and_update()
+                except Exception:
+                    print(f"{WHITE}[{RED}ERR{WHITE}] GIT is NOT Installed on Your System! You can't use AutoUpdater .")              
+                    sys.exit()
         if arguments.show_fingerprint:
             print("+------------------------+")
             print("| Available Fingerprints |")
@@ -236,11 +220,11 @@ if __name__ == '__main__':
             number = 1
             for fingerprint in fingerprints_list:
                 print(f"{number}. {fingerprint[0]}")
-                number += 1
-        
-        elif arguments.subdomain_list:
+                number += 1            
+            
+        if arguments.subdomain_list:
             print("==================================================================")
-            print(f"[*] Adding Appropriate Web Protocal to Subdomains using httpx ...")
+            print(f"[*] Adding Appropriate Web Protocol to Subdomains using httpx ...")
             if "\\" in arguments.subdomain_list:
                 filename = arguments.subdomain_list.split("\\")[-1]
                 
@@ -259,7 +243,7 @@ if __name__ == '__main__':
                 subprocess.run(f"type \"{arguments.subdomain_list}\" | \"{httpx_path}\" -threads 100 -o \"" + outputFileName + "\"", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
             else:
                 subprocess.run(f"cat \"{arguments.subdomain_list}\" | httpx -threads 100 -o \"" + outputFileName + "\"", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
-           
+            
             print(f"[+] Done !")
             print("==================================================================\n")        
             subdomain_list = readTargetFromFile(outputFileName)
@@ -300,7 +284,6 @@ if __name__ == '__main__':
         else:
             url = input("\n[?] Enter URL: ")
             testTarget(url)
-            
     except KeyboardInterrupt:
         sys.exit()
 
